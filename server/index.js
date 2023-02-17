@@ -28,6 +28,14 @@ app.post('/register', (req, res)=>{
     });
 });
 
+
+app.post('/RegisterProfile', (req, res)=>{
+    const username = req.body.username
+    const name = req.body.username
+    
+})
+
+
 app.post('/login', (req, res)=>{
     const username_ = req.body.username;
     const password_ = req.body.password;
@@ -46,6 +54,7 @@ app.post('/login', (req, res)=>{
         }
     })
 })
+
 
 
 app.get('/', (req, res)=>{
