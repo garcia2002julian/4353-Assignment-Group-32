@@ -1,8 +1,11 @@
-# 4353-Assignment-Group-32
+README
+Description
+This is a rough draft of a project.
 
-This is a rough draft.
+Installation
+To install and run this project on your local machine, please follow these steps:
 
-In the terminal   
+Open your terminal.
+Change directory to client by typing cd client.
+Type npm start to start the program.
 
-1. type cd client 
-2. npm start to start the program
