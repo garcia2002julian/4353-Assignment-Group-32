@@ -1,6 +1,7 @@
 import Navbar from "./Components/Navbar/Navbar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import Picture from "./profile-icon.jpg";
 
 // var Name = "NAME";
 // var Address1 = "Address1";
@@ -26,6 +27,8 @@ export default function Profile() {
 
   //const [responseData, setResponseData] = useState();
 
+  const fileInputField = useRef(null);
+  const [image, setImage] = useState(Picture);
   const [Name, setName] = useState("Name");
   const [Address1, setAddress1] = useState("Address1");
   const [Address2, setAddress2] = useState("Address2");
@@ -44,7 +47,9 @@ export default function Profile() {
   return (
     <div className="container-Profile">
       <Navbar />
-      <div className="profileImage-container"></div>
+      <div className="profileImage-container">
+        <img src={image} alt="" className="image" />
+      </div>
       <div className="profileInformation-container">
         <div className="Name-container">Name: {Name} </div>
         <div className="Address-container">
@@ -94,6 +99,19 @@ export default function Profile() {
             type="text"
             value={Zipcode}
             onChange={(e) => setZipcode(e.target.value)}
+          />
+          <label>Change Image</label>
+          <input
+            type="file"
+            accept="/image/*"
+            ref={fileInputField}
+            onChange={(e) => {
+              const file = e.target.value[0];
+              if (file && file.type.substring(0, 5) === "image") setImage(file);
+              else setImage(null);
+            }}
+            title=""
+            value=""
           />
           <input type="submit" value="Submit" />
         </form>
