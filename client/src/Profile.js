@@ -1,7 +1,8 @@
 import Navbar from "./Components/Navbar/Navbar";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import Picture from "./profile-icon.jpg";
+import Picture from "./pexels-fcl-by-photofabiannicom-5411674.jpg";
+import { useDropzone } from "react-dropzone";
 
 // var Name = "NAME";
 // var Address1 = "Address1";
@@ -9,6 +10,37 @@ import Picture from "./profile-icon.jpg";
 // var City = "City";
 // var State = "State";
 // var Zipcode = "zipcode";
+
+function MyDropzone(props) {
+  const onDrop = useCallback((acceptedFiles) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(acceptedFiles[0]);
+    img.onload = () => {
+      if (
+        img.width < 300 &&
+        img.height < 300 &&
+        img.width > 150 &&
+        img.height > 150
+      )
+        props.setImage(URL.createObjectURL(acceptedFiles[0]));
+      else {
+        return;
+      }
+    };
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  return (
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      {isDragActive ? (
+        <p>Drop the files here ...</p>
+      ) : (
+        <p>click to select files</p>
+      )}
+    </div>
+  );
+}
 
 export default function Profile() {
   const [showForm, setShowForm] = useState(false);
@@ -101,18 +133,19 @@ export default function Profile() {
             onChange={(e) => setZipcode(e.target.value)}
           />
           <label>Change Image</label>
-          <input
+          {/* <input
             type="file"
-            accept="/image/*"
-            ref={fileInputField}
+            accept="image/*"
+            multiple="false"
             onChange={(e) => {
-              const file = e.target.value[0];
-              if (file && file.type.substring(0, 5) === "image") setImage(file);
-              else setImage(null);
+              const reader = new FileReader();
+              console.log(e.target.files.file);
+              setImage(e.target.files.file);
             }}
             title=""
             value=""
-          />
+          /> */}
+          <MyDropzone setImage={setImage}></MyDropzone>
           <input type="submit" value="Submit" />
         </form>
       ) : (
