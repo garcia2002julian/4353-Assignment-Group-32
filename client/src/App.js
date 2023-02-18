@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./App.css";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Profile from "./Profile";
 
 function App() {
   const [usernameReg, setUsernameReg] = useState("");
@@ -41,7 +40,45 @@ function App() {
 
   return (
     <div className="App">
-      <Profile />
+      <div className="registration">
+        <h1>Registration</h1>
+        <label>Username</label>
+        <input
+          type="text"
+          onChange={(event) => {
+            setUsernameReg(event.target.value);
+          }}
+        />
+        <label>Password</label>
+        <input
+          type="text"
+          onChange={(event) => {
+            setPasswordReg(event.target.value);
+          }}
+        />
+        <button onClick={register}>Register</button>
+      </div>
+      <div className="login">
+        <h1>Login</h1>
+        <label>Username</label>
+        <input
+          type="text"
+          placeholder="Enter username"
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
+        />
+        <label>Password</label>
+        <input
+          type="text"
+          placeholder="Enter password"
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
+        />
+        <button onClick={login}>Login</button>
+        <h1>{logInStatus}</h1>
+      </div>
     </div>
   );
 }
