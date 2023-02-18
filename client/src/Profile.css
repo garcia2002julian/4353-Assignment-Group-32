@@ -1,6 +1,4 @@
 
-
-
 body{
     background: rgb(105, 113, 113);
 }
@@ -20,11 +18,11 @@ body{
     padding: 20px;
 }
 
-.profileImage-container{
-    padding: 20px;
-}
 img{
-    opacity: .3;
+    width: 350px;
+    border-radius: 1em;
+    filter: grayscale(70%);
+    box-shadow: 0 0.588em 1.550em rgb(100, 156, 156);
 }
 
 button{
@@ -47,6 +45,7 @@ button:hover{
 form{
 
     padding: 55px;
+    border-radius: .5em;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
