@@ -1,10 +1,10 @@
 import './App.css';
-import LoginPage from './LoginPage';
 import Home from './Home';
+import SignUp from './SignUp';
 import Quota from './Quota'
 import Profile from './Profile'
 import History from './History'
-import RegisterPage from './RegisterPage'
+import LoginForm from './LoginForm'
 import {Link, Route, Routes} from "react-router-dom";
 function App() {
  
