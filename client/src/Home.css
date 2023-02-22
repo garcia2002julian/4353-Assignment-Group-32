@@ -1,0 +1,10 @@
+ html { 
+    filter: grayscale(50%);
+  } 
+
+
+body{
+    background: url(pexels-fcl-by-photofabiannicom-5411674.jpg) no-repeat center fixed; 
+    background-size: 100% 100%;
+}
+
