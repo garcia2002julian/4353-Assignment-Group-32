@@ -31,3 +31,13 @@ function App() {
 }
 
 export default App;
+
+/*Replaced RegisterPage and LoginPage for -- LoginForm and SignUp
+in:
+
+import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage'
+
+<Route path="/" element={<RegisterPage/>}/>
+<Route path="/Login" element={<LoginPage/>}/>
+*/
