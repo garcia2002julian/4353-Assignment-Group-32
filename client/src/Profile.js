@@ -1,8 +1,9 @@
 import Navbar from "./Components/Navbar/Navbar";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import Picture from "./pexels-fcl-by-photofabiannicom-5411674.jpg";
+import Picture from "./profile-icon.jpg";
 import { useDropzone } from "react-dropzone";
+import "./Profile.css";
 
 // var Name = "NAME";
 // var Address1 = "Address1";
