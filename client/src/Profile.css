@@ -1,7 +1,4 @@
 
-body{
-    background: rgb(105, 113, 113);
-}
 .container-Profile{
     display: flex;
     flex-direction: column;
@@ -18,12 +15,6 @@ body{
     padding: 20px;
 }
 
-img{
-    width: 350px;
-    border-radius: 1em;
-    filter: grayscale(70%);
-    box-shadow: 0 0.588em 1.550em rgb(100, 156, 156);
-}
 
 button{
     margin-top: auto;
@@ -42,7 +33,7 @@ button:hover{
     background-color: lightslategrey;
 }
 
-form{
+.changeForm{
 
     padding: 55px;
     border-radius: .5em;
@@ -55,7 +46,7 @@ form{
 }
 
 label{
-    color: rgb(18, 59, 71);
+    color: rgb(72, 235, 235);
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     padding: 5px;
 }
@@ -63,6 +54,7 @@ label{
 input[type="text"]{
     border: none;
     border-radius: 0.25em;
+    width: 325px;
     text-align:center;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     padding: 2px;
@@ -75,13 +67,13 @@ input:focus{
 
 
 input[type="submit"]{
-    color:rgb(35, 45, 48);
-    width: 80px;
-    background-color:rgb(191, 206, 206); 
+    color:rgb(191, 206, 206);
+    width: 150px;
+    background-color: rgb(35, 45, 48); 
     border-radius: .5em;
 
 }
 
 input[type="submit"]:focus{
     outline-color: rgb(63, 84, 95);
-}
+} 
