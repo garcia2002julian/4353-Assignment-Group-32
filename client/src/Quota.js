@@ -40,7 +40,7 @@ export default function Quota() {
           width: 'auto',
           p: '10px',
           m: '15vh auto', // set horizontal margin to auto
-          bgcolor: 'red',
+          bgcolor: 'white',
           borderRadius: 1,
         }}
         
