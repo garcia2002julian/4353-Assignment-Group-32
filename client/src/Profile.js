@@ -5,13 +5,6 @@ import Picture from "./profile-icon.jpg";
 import { useDropzone } from "react-dropzone";
 import "./Profile.css";
 
-// var Name = "NAME";
-// var Address1 = "Address1";
-// var Address2 = "Address2";
-// var City = "City";
-// var State = "State";
-// var Zipcode = "zipcode";
-
 function MyDropzone(props) {
   const onDrop = useCallback((acceptedFiles) => {
     const img = new Image();
@@ -48,7 +41,6 @@ export default function Profile() {
 
   const ShowForm = () => {
     setShowForm(!showForm);
-    console.log(showForm);
   };
 
   // using this when getting into the backend
@@ -70,6 +62,14 @@ export default function Profile() {
   const [Zipcode, setZipcode] = useState("Zipcode");
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+    setName(e.target[0].value);
+    setAddress1(e.target[1].value);
+    setAddress2(e.target[2].value);
+    setCity(e.target[3].value);
+    setState(e.target[4].value);
+    setZipcode(e.target[5].value);
+    setShowForm();
     //backend stuff
     // setResponseData({
     //   name: Name,
@@ -98,54 +98,18 @@ export default function Profile() {
         <form onSubmit={handleSubmit} className="changeForm">
           Change Information:
           <label>Name:</label>
-          <input
-            type="text"
-            value={Name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <input type="text" defaultValue={Name} maxLength={20} />
           <label>Address1</label>
-          <input
-            type="text"
-            value={Address1}
-            onChange={(e) => setAddress1(e.target.value)}
-          />
+          <input type="text" defaultValue={Address1} maxLength={30} />
           <label>Address2</label>
-          <input
-            type="text"
-            value={Address2}
-            onChange={(e) => setAddress2(e.target.value)}
-          />
+          <input type="text" defaultValue={Address2} maxLength={30} />
           <label>City</label>
-          <input
-            type="text"
-            value={City}
-            onChange={(e) => setCity(e.target.value)}
-          />
+          <input type="text" defaultValue={City} maxLength={15} />
           <label>State</label>
-          <input
-            type="text"
-            value={State}
-            onChange={(e) => setState(e.target.value)}
-          />
+          <input type="text" defaultValue={State} maxLength={20} />
           <label>Zipcode</label>
-          <input
-            type="text"
-            value={Zipcode}
-            onChange={(e) => setZipcode(e.target.value)}
-          />
+          <input type="text" defaultValue={Zipcode} maxLength={8} />
           <label>Change Image</label>
-          {/* <input
-            type="file"
-            accept="image/*"
-            multiple="false"
-            onChange={(e) => {
-              const reader = new FileReader();
-              console.log(e.target.files.file);
-              setImage(e.target.files.file);
-            }}
-            title=""
-            value=""
-          /> */}
           <MyDropzone setImage={setImage}></MyDropzone>
           <input type="submit" value="Submit" />
         </form>
