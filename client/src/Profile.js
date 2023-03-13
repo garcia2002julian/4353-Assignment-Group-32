@@ -78,7 +78,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="container-Profile">
+    <div className="container-Profile" style={{color:"rgb(32, 177, 255)"}}>
       <Navbar />
       <div className="profileImage-container">
         <img src={image} alt="" className="image" />
