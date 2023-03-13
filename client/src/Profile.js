@@ -93,7 +93,7 @@ export default function Profile() {
           <div className="Zipcode-container">Zipcode: {Zipcode}</div>
         </div>
       </div>
-      <button onClick={(e) => ShowForm()}>Change Information</button>
+      <button className="profileButton" onClick={(e) => ShowForm()}>Change Information</button>
       {showForm ? (
         <form onSubmit={handleSubmit} className="changeForm">
           Change Information:
