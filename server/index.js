@@ -57,18 +57,61 @@ app.post('/login', (req, res)=>{
 
 
 
-app.get('/', (req, res)=>{
-    db.query('SELECT * from userinfo', (err, result) =>{
-        if (err){
-            console.log("Error")
-        } else{
-            res.send(result)
-        }
-    });
-
+app.get('/getUserInfo', (req, res)=>{
+    // db.query('SELECT * from userinfo', (err, result) =>{
+    //     if (err){
+    //         console.log("Error")
+    //     } else{
+    //         res.send(result)
+    //     }
+    // });
+    res.send({
+        "username": "Random1",
+        "password": "1234567",
+        "full name": "RandomUser1",
+        "address 1": "1203 Clear Lake",
+        "address 2": null,
+        "city": "Houston",
+        "state": "Texas",
+        "zipcode": "77477",
+        "newuser": 1
+    })
 
 })
 
+app.post('/submitQuota', (req, res)=>{
+    const gallonR = req.body.gallon_req;
+    const deliveryA = req.body.delivery_add;
+    const day = req.body.date;
+    const suggestprice = req.body.suggest_p;
+    const total = req.body.total_amount
+    // Send to Database using mysql or any other database software afterwards update userstatus from DB to recurring user.
+
+
+    // db.query('SELECT * FROM userinfo WHERE username = ? AND password = ?', [username_, password_], (err, result)=>{
+    //     if (err){
+    //         res.send({err:err})
+    //     }
+
+        
+    //     if (result.length > 0){
+    //         res.send(result);
+    //     } else{
+    //         console.log("Wrong password")
+    //         res.send({message:"wrong password or username"});
+    //     }
+    // })
+
+    //
+
+
+    console.log(gallonR);
+    console.log(deliveryA);
+    console.log(day);
+    console.log(suggestprice);
+    console.log(total);
+    res.send('POST ROUTE REACHED')
+})
 
 
 
