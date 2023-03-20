@@ -1,73 +1,80 @@
-.container-Profile{
-    display: flex;
-    flex-direction: column;
-    justify-content:column;
-    align-items: center;
-    padding: 20px;
-
+.container-Profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: column;
+  align-items: center;
+  padding: 20px;
 }
-.profileInformation-container{
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    align-items:center;
-    padding: 20px;
-}
-
-
-.profileButton{
-    margin-top: auto;
-    width: 20%;
-    height: 2em;
-    background-color: rgb(35, 45, 48);
-    color: rgb(255, 255, 255);
-    transition: 0.5s;
-    border-radius: .5em;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 15px;
+.profileInformation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-.profileButton:hover{
-    background-color: lightslategrey;
+.profileButton {
+  margin-top: auto;
+  width: 20%;
+  height: 2em;
+  background-color: rgb(35, 45, 48);
+  color: rgb(255, 255, 255);
+  transition: 0.5s;
+  border-radius: 0.5em;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
 }
 
-.changeForm{
-
-    padding: 55px;
-    border-radius: .5em;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(144, 181, 181, 0.5);
-    box-shadow: 0 0.188em 1.550em rgb(100, 156, 156);
+.profileButton:hover {
+  background-color: lightslategrey;
 }
 
-label{
-    color: rgb(72, 235, 235);
-    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    
+.changeForm {
+  padding: 55px;
+  border-radius: 0.5em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(144, 181, 181, 0.5);
+  box-shadow: 0 0.188em 1.55em rgb(100, 156, 156);
 }
 
-input[type="text"]{
-
-    width: 325px;
-    text-align:center;
-    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-
+input[type="text"] {
+  padding: 0;
+  height: 30px;
+  border: 1px solid #000000;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
 }
 
-input:focus{
-    outline-color: rgb(63, 84, 95);
+input[type="submit"] {
+  padding: 0;
+  height: 30px;
+  border: 1px solid #000000;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
 }
 
-
-input[type="submit"]{
-    color:rgb(191, 206, 206);
-    width: 300px;
-    background-color: rgb(35, 45, 48); 
-    border-radius: .5em;
-
+label {
+  color: rgb(72, 235, 235);
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 
+input[type="text"] {
+  width: 325px;
+  text-align: center;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
+input:focus {
+  outline-color: rgb(63, 84, 95);
+}
+
+input[type="submit"] {
+  color: rgb(191, 206, 206);
+  width: 300px;
+  background-color: rgb(35, 45, 48);
+  border-radius: 0.5em;
+}
