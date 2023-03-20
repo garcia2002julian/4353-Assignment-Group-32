@@ -41,7 +41,7 @@
   box-shadow: 0 0.188em 1.55em rgb(100, 156, 156);
 }
 
-input[type="text"] {
+.nameBox {
   padding: 0;
   height: 30px;
   border: 1px solid #000000;
@@ -49,12 +49,48 @@ input[type="text"] {
   font-size: 16px;
 }
 
-input[type="submit"] {
+.address1Box {
   padding: 0;
   height: 30px;
   border: 1px solid #000000;
   border-color: rgba(255, 255, 255, 0.15);
   font-size: 16px;
+}
+
+.address2Box {
+  padding: 0;
+  height: 30px;
+  border: 1px solid #000000;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
+}
+
+.cityBox {
+  padding: 0;
+  height: 30px;
+  border: 1px solid #000000;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
+}
+
+.zipBox {
+  padding: 0;
+  height: 30px;
+  border: 1px solid #000000;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
+}
+
+.submitBox {
+  color: rgb(191, 206, 206);
+  width: 300px;
+  background-color: rgb(35, 45, 48);
+  padding: 0;
+  height: 30px;
+  border: 1px solid #000000;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
+  cursor: pointer;
 }
 
 label {
@@ -70,11 +106,4 @@ input[type="text"] {
 
 input:focus {
   outline-color: rgb(63, 84, 95);
-}
-
-input[type="submit"] {
-  color: rgb(191, 206, 206);
-  width: 300px;
-  background-color: rgb(35, 45, 48);
-  border-radius: 0.5em;
 }

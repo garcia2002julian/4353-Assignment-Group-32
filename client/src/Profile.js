@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import Picture from "./profile-icon.jpg";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./Auth";
 import "./Profile.css";
 
 function MyDropzone(props) {
@@ -43,16 +45,8 @@ export default function Profile() {
     setShowForm(!showForm);
   };
 
-  // using this when getting into the backend
-
-  //   useEffect(async () => {
-  //     const data = await axios.get("http://localhost:3001/register");
-  //     setResponseData(data);
-  //   }, []);
-
-  //const [responseData, setResponseData] = useState();
-
-  const fileInputField = useRef(null);
+  const auth = useAuth();
+  const navigate = useNavigate();
   const [image, setImage] = useState(Picture);
   const [Name, setName] = useState("Name");
   const [Address1, setAddress1] = useState("Address1");
@@ -60,6 +54,32 @@ export default function Profile() {
   const [City, setCity] = useState("City");
   const [State, setState] = useState("State");
   const [Zipcode, setZipcode] = useState("Zipcode");
+  const [userInfo, setUserInfo] = useState(null);
+
+  //For database
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        `http://localhost:3001/getUserInfo/${auth.user}`
+      );
+      const data = await response;
+      setUserInfo(data);
+
+      setName(data.data[0].Name);
+      setAddress1(data.data[0].Address1);
+      setAddress2(data.data[0].Address2);
+      setCity(data.data[0].City);
+      setState(data.data[0].State);
+      setZipcode(data.data[0].Zipcode);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleLogout = () => {
+    //auth.logout_(); used when using database
+    navigate("/");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,11 +90,19 @@ export default function Profile() {
     if (e.target[4].value !== "") setState(e.target[4].value);
     setZipcode(e.target[5].value);
     setShowForm();
-    //backend stuff
-    // setResponseData({
-    //   name: Name,
-    // });
-    // axios.post("http://localhost:3001/register", responseData);
+    // FOR DATABASE
+    // axios
+    //   .put(`http://localhost:3001/update/${auth.user}`, {
+    //     Name: Name,
+    //     Address1: Address1,
+    //     Address2: Address2,
+    //     City: City,
+    //     State: State,
+    //     Zipcode: Zipcode,
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //   });
   };
 
   return (
@@ -100,13 +128,33 @@ export default function Profile() {
         <form onSubmit={handleSubmit} className="changeForm">
           Change Information:
           <label>Name:</label>
-          <input type="text" defaultValue={Name} maxLength={20} />
+          <input
+            type="text"
+            defaultValue={Name}
+            maxLength={20}
+            className="nameBox"
+          />
           <label>Address1:</label>
-          <input type="text" defaultValue={Address1} maxLength={30} />
+          <input
+            type="text"
+            defaultValue={Address1}
+            maxLength={30}
+            className="address1Box"
+          />
           <label>Address2:</label>
-          <input type="text" defaultValue={Address2} maxLength={30} />
+          <input
+            type="text"
+            defaultValue={Address2}
+            maxLength={30}
+            className="address2Box"
+          />
           <label>City:</label>
-          <input type="text" defaultValue={City} maxLength={15} />
+          <input
+            type="text"
+            defaultValue={City}
+            maxLength={15}
+            className="cityBox"
+          />
           <label>State:</label>
           <select class="form-select" type="text">
             <option value="">State</option>
@@ -163,14 +211,20 @@ export default function Profile() {
             <option value="WY">WY</option>
           </select>
           <label>Zipcode:</label>
-          <input type="text" defaultValue={Zipcode} maxLength={8} />
+          <input
+            type="text"
+            defaultValue={Zipcode}
+            maxLength={8}
+            className="zipBox"
+          />
           <label>Change Image:</label>
           <MyDropzone setImage={setImage}></MyDropzone>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" className="submitBox" />
         </form>
       ) : (
         <div></div>
       )}
+      <button onClick={handleLogout}>Log out</button>
     </div>
   );
 }
