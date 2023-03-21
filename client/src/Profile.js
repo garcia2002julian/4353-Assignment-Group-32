@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import Picture from "./profile-icon.jpg";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./Auth";
 import "./Profile.css";
 
 function MyDropzone(props) {
@@ -43,16 +45,8 @@ export default function Profile() {
     setShowForm(!showForm);
   };
 
-  // using this when getting into the backend
-
-  //   useEffect(async () => {
-  //     const data = await axios.get("http://localhost:3001/register");
-  //     setResponseData(data);
-  //   }, []);
-
-  //const [responseData, setResponseData] = useState();
-
-  const fileInputField = useRef(null);
+  const auth = useAuth();
+  const navigate = useNavigate();
   const [image, setImage] = useState(Picture);
   const [Name, setName] = useState("Name");
   const [Address1, setAddress1] = useState("Address1");
@@ -60,6 +54,32 @@ export default function Profile() {
   const [City, setCity] = useState("City");
   const [State, setState] = useState("State");
   const [Zipcode, setZipcode] = useState("Zipcode");
+  const [userInfo, setUserInfo] = useState(null);
+
+  //For database
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        `http://localhost:3001/getUserInfo/${auth.user}`
+      );
+      const data = await response;
+      setUserInfo(data);
+
+      setName(data.data[0].Name);
+      setAddress1(data.data[0].Address1);
+      setAddress2(data.data[0].Address2);
+      setCity(data.data[0].City);
+      setState(data.data[0].State);
+      setZipcode(data.data[0].Zipcode);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleLogout = () => {
+    //auth.logout_(); used when using database
+    navigate("/");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,18 +87,26 @@ export default function Profile() {
     setAddress1(e.target[1].value);
     setAddress2(e.target[2].value);
     setCity(e.target[3].value);
-    setState(e.target[4].value);
+    if (e.target[4].value !== "") setState(e.target[4].value);
     setZipcode(e.target[5].value);
     setShowForm();
-    //backend stuff
-    // setResponseData({
-    //   name: Name,
-    // });
-    // axios.post("http://localhost:3001/register", responseData);
+    // FOR DATABASE
+    // axios
+    //   .put(`http://localhost:3001/update/${auth.user}`, {
+    //     Name: Name,
+    //     Address1: Address1,
+    //     Address2: Address2,
+    //     City: City,
+    //     State: State,
+    //     Zipcode: Zipcode,
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //   });
   };
 
   return (
-    <div className="container-Profile" style={{color:"rgb(32, 177, 255)"}}>
+    <div className="container-Profile" style={{ color: "rgb(32, 177, 255)" }}>
       <Navbar />
       <div className="profileImage-container">
         <img src={image} alt="" className="image" />
@@ -93,29 +121,110 @@ export default function Profile() {
           <div className="Zipcode-container">Zipcode: {Zipcode}</div>
         </div>
       </div>
-      <button className="profileButton" onClick={(e) => ShowForm()}>Change Information</button>
+      <button className="profileButton" onClick={(e) => ShowForm()}>
+        Change Information
+      </button>
       {showForm ? (
         <form onSubmit={handleSubmit} className="changeForm">
           Change Information:
           <label>Name:</label>
-          <input type="text" defaultValue={Name} maxLength={20} />
-          <label>Address1</label>
-          <input type="text" defaultValue={Address1} maxLength={30} />
-          <label>Address2</label>
-          <input type="text" defaultValue={Address2} maxLength={30} />
-          <label>City</label>
-          <input type="text" defaultValue={City} maxLength={15} />
-          <label>State</label>
-          <input type="text" defaultValue={State} maxLength={20} />
-          <label>Zipcode</label>
-          <input type="text" defaultValue={Zipcode} maxLength={8} />
-          <label>Change Image</label>
+          <input
+            type="text"
+            defaultValue={Name}
+            maxLength={20}
+            className="nameBox"
+          />
+          <label>Address1:</label>
+          <input
+            type="text"
+            defaultValue={Address1}
+            maxLength={30}
+            className="address1Box"
+          />
+          <label>Address2:</label>
+          <input
+            type="text"
+            defaultValue={Address2}
+            maxLength={30}
+            className="address2Box"
+          />
+          <label>City:</label>
+          <input
+            type="text"
+            defaultValue={City}
+            maxLength={15}
+            className="cityBox"
+          />
+          <label>State:</label>
+          <select class="form-select" type="text">
+            <option value="">State</option>
+            <option value="AL">AL</option>
+            <option value="AK">AK</option>
+            <option value="AR">AR</option>
+            <option value="AZ">AZ</option>
+            <option value="CA">CA</option>
+            <option value="CO">CO</option>
+            <option value="CT">CT</option>
+            <option value="DC">DC</option>
+            <option value="DE">DE</option>
+            <option value="FL">FL</option>
+            <option value="GA">GA</option>
+            <option value="HI">HI</option>
+            <option value="IA">IA</option>
+            <option value="ID">ID</option>
+            <option value="IL">IL</option>
+            <option value="IN">IN</option>
+            <option value="KS">KS</option>
+            <option value="KY">KY</option>
+            <option value="LA">LA</option>
+            <option value="MA">MA</option>
+            <option value="MD">MD</option>
+            <option value="ME">ME</option>
+            <option value="MI">MI</option>
+            <option value="MN">MN</option>
+            <option value="MO">MO</option>
+            <option value="MS">MS</option>
+            <option value="MT">MT</option>
+            <option value="NC">NC</option>
+            <option value="NE">NE</option>
+            <option value="NH">NH</option>
+            <option value="NJ">NJ</option>
+            <option value="NM">NM</option>
+            <option value="NV">NV</option>
+            <option value="NY">NY</option>
+            <option value="ND">ND</option>
+            <option value="OH">OH</option>
+            <option value="OK">OK</option>
+            <option value="OR">OR</option>
+            <option value="PA">PA</option>
+            <option value="RI">RI</option>
+            <option value="SC">SC</option>
+            <option value="SD">SD</option>
+            <option value="TN">TN</option>
+            <option value="TX">TX</option>
+            <option value="UT">UT</option>
+            <option value="VT">VT</option>
+            <option value="VA">VA</option>
+            <option value="WA">WA</option>
+            <option value="WI">WI</option>
+            <option value="WV">WV</option>
+            <option value="WY">WY</option>
+          </select>
+          <label>Zipcode:</label>
+          <input
+            type="text"
+            defaultValue={Zipcode}
+            maxLength={8}
+            className="zipBox"
+          />
+          <label>Change Image:</label>
           <MyDropzone setImage={setImage}></MyDropzone>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" className="submitBox" />
         </form>
       ) : (
         <div></div>
       )}
+      <button onClick={handleLogout}>Log out</button>
     </div>
   );
 }
