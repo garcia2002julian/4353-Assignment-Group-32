@@ -10,9 +10,25 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
 
+import {useAuth} from "./Auth"
+import Axios from "axios"
+import { useState, useEffect } from "react";
+
+
 
 function HistoryTable() {
     const tempData = historyTempData
+    const [history, sethistory] = useState([]);
+    const auth = useAuth();
+    useEffect(()=>{
+      const fetch = async ()=>{
+        const response = await fetch("http://localhost:3001/viewhistory/${auth.userid}");
+        const historyData = await response.json();
+        sethistory(historyData);
+      }; 
+      fetch();
+    }, [])
+
 
   return (
     <Box>
