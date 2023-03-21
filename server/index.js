@@ -114,5 +114,16 @@ app.post('/submitQuota', (req, res)=>{
 })
 
 
+app.get('/viewhistory/:userid', (req, res)=>{
+    const userid = req.params.userid;
+    db.query("select * from purchasehistory where userid=?", userid, (err, result)=>{
+        if(err)
+            {console.log(err)}
+        else{
+            res.send(result)
+        }
+    })
+})
+
 
 app.listen(PORT, ()=>console.log("Server running on 3001"))
