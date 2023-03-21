@@ -116,6 +116,7 @@ app.post('/submitQuota', (req, res)=>{
 
 app.get('/viewhistory/:userid', (req, res)=>{
     const userid = req.params.userid;
+    //purchasehistory table will get added in our database once we connect to a DB
     db.query("select * from purchasehistory where userid=?", userid, (err, result)=>{
         if(err)
             {console.log(err)}
@@ -124,6 +125,5 @@ app.get('/viewhistory/:userid', (req, res)=>{
         }
     })
 })
-
 
 app.listen(PORT, ()=>console.log("Server running on 3001"))
