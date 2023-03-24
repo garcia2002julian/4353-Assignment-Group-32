@@ -2,41 +2,9 @@ import Navbar from "./Components/Navbar/Navbar";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import Picture from "./profile-icon.jpg";
-import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./Auth";
 import "./Profile.css";
-
-function MyDropzone(props) {
-  const onDrop = useCallback((acceptedFiles) => {
-    const img = new Image();
-    img.src = URL.createObjectURL(acceptedFiles[0]);
-    img.onload = () => {
-      if (
-        img.width < 300 &&
-        img.height < 300 &&
-        img.width > 150 &&
-        img.height > 150
-      )
-        props.setImage(URL.createObjectURL(acceptedFiles[0]));
-      else {
-        return;
-      }
-    };
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <p>click to select files</p>
-      )}
-    </div>
-  );
-}
 
 export default function Profile() {
   const [showForm, setShowForm] = useState(false);
@@ -45,8 +13,10 @@ export default function Profile() {
     setShowForm(!showForm);
   };
 
-  //FIXME: This doesnt work
   const auth = useAuth();
+  // auth.login_("abc");
+  console.log("Auth:", auth);
+  auth.login_(auth.user);
   const user = "testing123";
   const navigate = useNavigate();
   const [image, setImage] = useState(Picture);
@@ -67,9 +37,7 @@ export default function Profile() {
 
   //For database
   const fetchData = async () => {
-    const data = await axios.get(
-      `http://localhost:3001/getUserInfo?user=${user}`
-    );
+    const data = await axios.get(`http://localhost:3001/getUserInfo/${user}`);
 
     console.log("data:", data);
     setName(data.data.Name);
@@ -86,14 +54,14 @@ export default function Profile() {
   }, []);
 
   const handleLogout = () => {
-    //auth.logout_(); used when using database
+    auth.logout_();
     navigate("/");
   };
 
   const handleSubmit = (e) => {
     setShowForm();
     axios
-      .put(`http://localhost:3001/update?username=${user}`, {
+      .put(`http://localhost:3001/update/${user}`, {
         Name: Name,
         Address1: Address1,
         Address2: Address2,
@@ -238,8 +206,6 @@ export default function Profile() {
             maxLength={8}
             className="zipBox"
           />
-          <label>Change Image:</label>
-          <MyDropzone setImage={setImage}></MyDropzone>
           <input type="submit" value="Submit" className="submitBox" />
         </form>
       ) : (

@@ -69,12 +69,15 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.get("/getUserInfo", (req, res) => {
-  const user = req.query.user;
+app.get("/getUserInfo/:user", (req, res) => {
+  console.log("getuserinfo", req.params.user);
+  const user = req.params.user;
   db.query("SELECT * from userinfo WHERE username=?", [user], (err, result) => {
     if (err) {
       console.log("Error");
+      res.send("Error");
     } else {
+      console.log("result", result);
       res.send(result[0]);
     }
   });
@@ -92,7 +95,7 @@ app.get("/getUserInfo", (req, res) => {
   // });
 });
 
-app.put("/update", (req, res) => {
+app.put("/update/:username", (req, res) => {
   console.log(req);
   const data = req.query.username;
   const name = req.body.Name;
