@@ -11,6 +11,9 @@ const LoginForm = () => {
 
     const auth = useAuth();
     const navigate = useNavigate();
+    
+    const [loginStatus, setloginStatus] = useState('');
+
 
     const login = () => {
         axios.post('http://localhost:3001/login', {
@@ -24,7 +27,7 @@ const LoginForm = () => {
                 axios
                 .get('http://localhost:3001/getUserInfo/${username}', {})
                 .then((response) => {
-                    console.log(response.data[0].password);
+                    //console.log(response.data[0].password);
                     auth.login_(username);
                     navigate("/Profile");
                 });
@@ -33,9 +36,7 @@ const LoginForm = () => {
         });
     };
 
-    const [loginStatus, setloginStatus] = useState('');
-
-
+    
     return (
         <section className='section'>
             <p class='header'>Login Page</p>
