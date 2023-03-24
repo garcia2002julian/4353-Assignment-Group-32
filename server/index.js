@@ -145,24 +145,46 @@ app.get("/getUserInfo/:username", (req, res) => {
 });
 
 app.put("/update/:username", (req, res) => {
-  const data = req.params.username;
+  const username = req.params.username;
   const name = req.body.Name;
   const address1 = req.body.Address1;
   const address2 = req.body.Address2;
   const city = req.body.City;
   const state = req.body.State;
   const zip = req.body.Zipcode;
+  const password = req.body.Password;
+  const newPassword = req.body.NewPassword;
+  console.log(username);
+  console.log(password);
+  console.log(newPassword);
+
   db.query(
-    "UPDATE userinfo SET Name=$1, Address1=$2, Address2=$3, City=$4, State=$5, Zipcode=$6, newUser=0 WHERE username=$7 ",
-    [name, address1, address2, city, state, zip, data],
+    "UPDATE userinfo SET Name=$1, Address1=$2, Address2=$3, City=$4, State=$5, Zipcode=$6, newUser=0 WHERE username=$7 and password=$8",
+    [name, address1, address2, city, state, zip, username, password],
     (err, result) => {
       if (err) {
         console.log(err);
       } else {
-        res.send(result);
+        if (result.rowCount > 0) {
+        } else {
+          console.log("Wrong password");
+          res.send({ message: "Wrong password" });
+        }
       }
     }
   );
+  if (newPassword != "")
+    db.query(
+      "UPDATE userinfo SET password = $1, newUser=0 WHERE username=$2 and password=$3",
+      [newPassword, username, password],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(result.rows);
+        }
+      }
+    );
 });
 
 app.get("/getHistoryOfUser/:username", (req, res) => {

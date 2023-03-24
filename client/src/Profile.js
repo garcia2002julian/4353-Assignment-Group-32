@@ -10,6 +10,7 @@ export default function Profile() {
 
   const ShowForm = () => {
     setShowForm(!showForm);
+    setStatus("");
   };
 
   const auth = useAuth();
@@ -22,6 +23,9 @@ export default function Profile() {
   const [City, setCity] = useState("City");
   const [State, setState] = useState("State");
   const [Zipcode, setZipcode] = useState("Zipcode");
+  const [Password, setPassword] = useState("");
+  const [NewPassword, setNewPassword] = useState("");
+  const [Status, setStatus] = useState("");
   const [userInfo, setUserInfo] = useState({
     Name: "",
     Address1: "",
@@ -55,7 +59,6 @@ export default function Profile() {
   };
 
   const handleSubmit = (e) => {
-    setShowForm();
     axios
       .put(`http://localhost:3001/update/${user}`, {
         Name: Name,
@@ -64,9 +67,16 @@ export default function Profile() {
         City: City,
         State: State,
         Zipcode: Zipcode,
+        Password: Password,
+        NewPassword: NewPassword,
       })
       .then((response) => {
-        console.log(response);
+        if (response.data.message) {
+          setStatus(response.data.message);
+        } else {
+          setShowForm();
+        }
+        console.log("response", response);
         fetchData();
       });
     e.preventDefault();
@@ -94,6 +104,7 @@ export default function Profile() {
       <button className="profileButton" onClick={(e) => ShowForm()}>
         Change Information
       </button>
+
       {showForm ? (
         <form onSubmit={handleSubmit} className="changeForm">
           Change Information:
@@ -202,6 +213,25 @@ export default function Profile() {
             maxLength={8}
             className="zipBox"
           />
+          <label>New Password(leave empty if none): </label>
+          <input
+            type="text"
+            defaultValue={""}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+            }}
+            className="passBox"
+          />
+          <label>Password:</label>
+          <input
+            type="text"
+            defaultValue={""}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            className="passBox"
+          />
+          <h1>{Status}</h1>
           <button type="submit" className="submitBox">
             Submit
           </button>
