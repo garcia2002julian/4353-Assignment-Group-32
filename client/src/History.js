@@ -17,30 +17,40 @@ import { useState, useEffect } from "react";
 
 
 function HistoryTable() {
-    const tempData = historyTempData
-    const [history, sethistory] = useState([]);
-    const auth = useAuth();
-    useEffect(()=>{
-      const fetch = async ()=>{
-        const response = await fetch("http://localhost:3001/viewhistory/${auth.userid}");
-        const historyData = await response.json();
-        sethistory(historyData);
-      }; 
-      fetch();
-    }, [])
+  const [userHistory, setuserHistory] = useState(null);
+  const [userinfo, setuserinfo] = useState(null);
+
+  const auth = useAuth()
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const response = await fetch(`http://localhost:3001/getHistoryOfUser/${auth.user}`);
+      const response2 = await fetch(`http://localhost:3001/getUserInfo/${auth.user}`);
+      const data = await response.json();
+      const data2 = await response2.json();
+      setuserinfo(data2)
+      setuserHistory(data)
+      console.log(data2)
+    };
+
+    fetchData();
+  }, []);
+
+  if(!userHistory || userinfo[0].newuser == 1){
+    return <p>Loading...</p>;
+  }
+  
+  const clickmeDebugging = ()=>{
+    console.log(userHistory)
+  }
 
 
   return (
     <Box>
-      
     {/* <Button variant="contained" color="primary" href="/profile">Profile</Button> */}
-
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
         <TableRow>
-
-          <TableCell>Date</TableCell>
           <TableCell align="right">Gallons Requested</TableCell>
           <TableCell align="right">Delivery Address</TableCell>
           <TableCell align="right">Delivery Date</TableCell>
@@ -49,19 +59,21 @@ function HistoryTable() {
         </TableRow>
         </TableHead>
         <TableBody>
-            {tempData.map((i)=>(
+            {userHistory.map((i)=>(
                 <TableRow key = {i.Id}>
-                    <TableCell component="th" scope="row">{i["Date"]}</TableCell>
-                    <TableCell align="right">{i["Gallons Requested"]}</TableCell>
-                    <TableCell align="right">{i["Delivery Address"]}</TableCell>
-                    <TableCell align="right">{i["Delivery Date"]}</TableCell>
-                    <TableCell align="right">{i["Suggested Price"]}</TableCell>
-                    <TableCell align="right">{i["Total Amount Due"]}</TableCell>   
+                    <TableCell align="right">{i["gallonsrequested"]}</TableCell>
+                    <TableCell align="right">{i["deliveryaddress"]}</TableCell>
+                    <TableCell align="right">{i["deliverydate"]}</TableCell>
+                    <TableCell align="right">{i["suggestedprice"]}</TableCell>
+                    <TableCell align="right">{i["totalamountdue"]}</TableCell>   
                 </TableRow>
             ))}
         </TableBody>
       </Table>
     </TableContainer>
+    {/* <button onClick={clickmeDebugging}>
+        Debug
+      </button> */}
     </Box>
   );
 }
@@ -78,7 +90,7 @@ function History() {
 
   return (
     <div>
-      <Button variant="contained" color="primary" href="/home">Go back</Button>
+       {/* <Button variant="contained" color="primary" href="/home">Go back</Button> */}
       <HistoryTable />
     </div>
   );
