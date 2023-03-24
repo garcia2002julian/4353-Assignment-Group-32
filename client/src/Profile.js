@@ -45,7 +45,9 @@ export default function Profile() {
     setShowForm(!showForm);
   };
 
+  //FIXME: This doesnt work
   const auth = useAuth();
+  const user = "testing123";
   const navigate = useNavigate();
   const [image, setImage] = useState(Picture);
   const [Name, setName] = useState("Name");
@@ -54,25 +56,32 @@ export default function Profile() {
   const [City, setCity] = useState("City");
   const [State, setState] = useState("State");
   const [Zipcode, setZipcode] = useState("Zipcode");
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    Name: "",
+    Address1: "",
+    Address2: "",
+    City: "",
+    State: "",
+    Zipcode: "",
+  });
 
   //For database
+  const fetchData = async () => {
+    const data = await axios.get(
+      `http://localhost:3001/getUserInfo?user=${user}`
+    );
+
+    console.log("data:", data);
+    setName(data.data.Name);
+    setAddress1(data.data.Address1);
+    setAddress2(data.data.Address2);
+    setCity(data.data.City);
+    setState(data.data.State);
+    setZipcode(data.data.Zipcode);
+    setUserInfo(data.data);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `http://localhost:3001/getUserInfo/${auth.user}`
-      );
-      const data = await response;
-      setUserInfo(data);
-
-      setName(data.data[0].Name);
-      setAddress1(data.data[0].Address1);
-      setAddress2(data.data[0].Address2);
-      setCity(data.data[0].City);
-      setState(data.data[0].State);
-      setZipcode(data.data[0].Zipcode);
-    };
-
     fetchData();
   }, []);
 
@@ -82,27 +91,20 @@ export default function Profile() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setName(e.target[0].value);
-    setAddress1(e.target[1].value);
-    setAddress2(e.target[2].value);
-    setCity(e.target[3].value);
-    if (e.target[4].value !== "") setState(e.target[4].value);
-    setZipcode(e.target[5].value);
     setShowForm();
-    // FOR DATABASE
-    // axios
-    //   .put(`http://localhost:3001/update/${auth.user}`, {
-    //     Name: Name,
-    //     Address1: Address1,
-    //     Address2: Address2,
-    //     City: City,
-    //     State: State,
-    //     Zipcode: Zipcode,
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //   });
+    axios
+      .put(`http://localhost:3001/update?username=${user}`, {
+        Name: Name,
+        Address1: Address1,
+        Address2: Address2,
+        City: City,
+        State: State,
+        Zipcode: Zipcode,
+      })
+      .then((response) => {
+        console.log(response);
+        fetchData();
+      });
   };
 
   return (
@@ -112,13 +114,17 @@ export default function Profile() {
         <img src={image} alt="" className="image" />
       </div>
       <div className="profileInformation-container">
-        <div className="Name-container">Name: {Name} </div>
+        <div className="Name-container">Name: {userInfo.Name} </div>
         <div className="Address-container">
-          <div className="Address1-container">Address1: {Address1}</div>
-          <div className="Address2-container">Address2: {Address2}</div>
-          <div className="City-container">City: {City}</div>
-          <div className="State-container">State: {State}</div>
-          <div className="Zipcode-container">Zipcode: {Zipcode}</div>
+          <div className="Address1-container">
+            Address1: {userInfo.Address1}
+          </div>
+          <div className="Address2-container">
+            Address2: {userInfo.Address2}
+          </div>
+          <div className="City-container">City: {userInfo.City}</div>
+          <div className="State-container">State: {userInfo.State}</div>
+          <div className="Zipcode-container">Zipcode: {userInfo.Zipcode}</div>
         </div>
       </div>
       <button className="profileButton" onClick={(e) => ShowForm()}>
@@ -130,34 +136,45 @@ export default function Profile() {
           <label>Name:</label>
           <input
             type="text"
-            defaultValue={Name}
+            onChange={(e) => setName(e.target.value)}
+            defaultValue={userInfo.Name}
             maxLength={20}
             className="nameBox"
           />
           <label>Address1:</label>
           <input
             type="text"
-            defaultValue={Address1}
+            defaultValue={userInfo.Address1}
+            onChange={(e) => setAddress1(e.target.value)}
             maxLength={30}
             className="address1Box"
           />
           <label>Address2:</label>
           <input
             type="text"
-            defaultValue={Address2}
+            defaultValue={userInfo.Address2}
+            onChange={(e) => setAddress2(e.target.value)}
             maxLength={30}
             className="address2Box"
           />
           <label>City:</label>
           <input
             type="text"
-            defaultValue={City}
+            value={City}
+            onChange={(e) => {
+              // if (e.target.value.includes(/g[0-9]/)) return;
+              setCity(e.target.value);
+            }}
             maxLength={15}
             className="cityBox"
           />
           <label>State:</label>
-          <select class="form-select" type="text">
-            <option value="">State</option>
+          <select
+            class="form-select"
+            type="text"
+            onChange={(e) => setState(e.target.value)}
+            defaultValue={userInfo.State}
+          >
             <option value="AL">AL</option>
             <option value="AK">AK</option>
             <option value="AR">AR</option>
@@ -212,8 +229,12 @@ export default function Profile() {
           </select>
           <label>Zipcode:</label>
           <input
-            type="text"
-            defaultValue={Zipcode}
+            type="number"
+            value={Zipcode}
+            onChange={(e) => {
+              if (e.target.value.toString().length > 8) return;
+              setZipcode(e.target.value);
+            }}
             maxLength={8}
             className="zipBox"
           />
