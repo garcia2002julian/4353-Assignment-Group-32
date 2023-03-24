@@ -1,10 +1,17 @@
-import express from "express";
+//import express from "express";
 
-import bodyParser from "body-parser";
-import mysql from "mysql";
-import cors from "cors";
-import fs from "fs";
-import pkg from "pg";
+//import bodyParser from "body-parser";
+//import mysql from "mysql";
+//import cors from "cors";
+//import fs from "fs";
+//import pkg from "pg";
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const mysql = require("mysql");
+const cors = require("cors");
+const fs = require("fs");
+const pkg = require("pg");
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -336,4 +343,5 @@ app.put("/updateStatus/:username", (req, res) => {
 
 //
 
-app.listen(3001, () => console.log("Server running on 3001"));
+//app.listen(3001, () => console.log("Server running on 3001"));
+module.exports = app;
