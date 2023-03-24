@@ -61,19 +61,17 @@ export default function Quota() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await axios.get(
+      const response = await axios.get(
         `http://localhost:3001/getUserInfo/${auth.user}`
       );
-      console.log("Data:", data);
+      const data = await response;
       setUserInfo(data);
     };
 
     fetchData();
   }, []);
 
-  console.log("userinfo", userInfo);
-
-  if (!userInfo || (userInfo && userInfo.data.newUser == 1)) {
+  if (!userInfo || userInfo.data[0].newuser == 1) {
     return <p>Loading...</p>;
   }
 
@@ -93,16 +91,16 @@ export default function Quota() {
     //   setUserInfo(response.data)
     // });
     // console.log(userInfo)
-    // console.log(userInfo.data.State)
-    // console.log(userInfo.data.neverUseQuota)
+    // console.log(userInfo.data[0].State)
+    // console.log(userInfo.data[0].neverUseQuota)
 
-    if (userInfo.data.State == "TX" || userInfo.data.State == "Texas") {
+    if (userInfo.data[0].state == "TX" || userInfo.data[0].state == "Texas") {
       var locationFactor = 0.02;
     } else {
       var locationFactor = 0.04;
     }
     //---------------------------/
-    if (userInfo.data.neverUseQuota == 1) {
+    if (userInfo.data[0].neverusequota == 1) {
       var rateHistoryFactor = 0.01;
     } else {
       var rateHistoryFactor = 0.0;
@@ -136,7 +134,7 @@ export default function Quota() {
     axios
       .post("http://localhost:3001/submitQuota", {
         gallon_req: GallonRequested,
-        delivery_add: userInfo.data.Address1,
+        delivery_add: userInfo.data[0].address1,
         date: value["_d"],
         suggest_p: suggestAmount,
         total_amount: totalAmount,
@@ -152,7 +150,7 @@ export default function Quota() {
         // if (response.data.message) {
         //   setLoginStatus(response.data.message);
         // } else {
-        //   setLoginStatus(response.data.username);
+        //   setLoginStatus(response.data[0].username);
         // }
         console.log(response.data);
       });
@@ -198,7 +196,7 @@ export default function Quota() {
           id="outlined-disabled"
           label="Delivery Address"
           variant="filled"
-          defaultValue={userInfo.data.Address1}
+          defaultValue={userInfo.data[0].address1}
         />
         <DesktopDatePicker
           label="Date desktop"
