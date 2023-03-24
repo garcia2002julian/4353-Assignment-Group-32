@@ -68,7 +68,6 @@ export default function Profile() {
         State: State,
         Zipcode: Zipcode,
         Password: Password,
-        NewPassword: NewPassword,
       })
       .then((response) => {
         if (response.data.message) {
@@ -79,6 +78,14 @@ export default function Profile() {
         console.log("response", response);
         fetchData();
       });
+    if (NewPassword != "") {
+      axios
+        .put(`http://localhost:3001/updatePassword/${user}`, {
+          Password: Password,
+          NewPassword: NewPassword,
+        })
+        .then((response2) => {});
+    }
     e.preventDefault();
   };
 
