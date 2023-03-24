@@ -6,27 +6,40 @@ import Profile from './Profile'
 import History from './History'
 import LoginForm from './LoginForm'
 import {Link, Route, Routes} from "react-router-dom";
-function App() {
- 
+import { Navbar_ } from './Nav';
+import { AuthProvider } from './Auth';
+import { RequireAuth } from './RequireAuth';
+function App() { 
+
 
   return (
-    
     <div className="App">
-      
-    
-
       {/* <RegisterPage/> */}
       {/* <Home/>  */}
-      <Routes>
-        
+      <AuthProvider>
+      <Navbar_/>
+      <Routes>   
         <Route path="/" element={<LoginForm/>}/>
-        <Route path='/home' element={<Home/>}></Route>
         <Route path='/SignUp' element={<SignUp/>}/>
-        <Route path="/Quota" element={<Quota/>}/>
-        <Route path="/History" element={<History/>}/>
-        <Route path="/Profile" element={<Profile/>}/>
-      </Routes> 
+        {/* <Route path='/home' element={<Home/>}></Route> */}
+        <Route path="/Quota" element={
+        <RequireAuth>
+          <Quota/>
+        </RequireAuth>}/>
+        <Route path="/History" element={
+        <RequireAuth>
+        <History/>
+        </RequireAuth>
+        }/>
+        <Route path="/Profile" element={
+        <RequireAuth>
+        <Profile/>
+        </RequireAuth>
+        }/>
+\      </Routes> 
+    </AuthProvider>
       </div>
+
   );
 }
 

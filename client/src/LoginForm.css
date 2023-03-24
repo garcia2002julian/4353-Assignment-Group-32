@@ -1,4 +1,4 @@
-* {
+/* * {
     margin: 0;
     box-sizing: border-box;
     font-family: "Lucida Console", "Courier New", monospace;
@@ -78,4 +78,4 @@ input:focus {
 .text {
     position: relative;
     bottom: -2em;
-}
+} */

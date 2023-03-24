@@ -1,9 +1,10 @@
-import Navbar from "./Components/Navbar/Navbar";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import Picture from "./pexels-fcl-by-photofabiannicom-5411674.jpg";
+import Picture from "./profile-icon.jpg";
 import { useDropzone } from "react-dropzone";
-
+import "./Profile.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./Auth";
 // var Name = "NAME";
 // var Address1 = "Address1";
 // var Address2 = "Address2";
@@ -12,6 +13,7 @@ import { useDropzone } from "react-dropzone";
 // var Zipcode = "zipcode";
 
 function MyDropzone(props) {
+
   const onDrop = useCallback((acceptedFiles) => {
     const img = new Image();
     img.src = URL.createObjectURL(acceptedFiles[0]);
@@ -50,6 +52,8 @@ export default function Profile() {
     console.log(showForm);
   };
 
+
+ 
   // using this when getting into the backend
 
   //   useEffect(async () => {
@@ -58,7 +62,8 @@ export default function Profile() {
   //   }, []);
 
   //const [responseData, setResponseData] = useState();
-
+  const auth = useAuth()
+  const navigate = useNavigate()
   const fileInputField = useRef(null);
   const [image, setImage] = useState(Picture);
   const [Name, setName] = useState("Name");
@@ -67,8 +72,50 @@ export default function Profile() {
   const [City, setCity] = useState("City");
   const [State, setState] = useState("State");
   const [Zipcode, setZipcode] = useState("Zipcode");
+  const [userInfo, setUserInfo] = useState(null);
+  const handleLogout = ()=>{
+    auth.logout_()
+    navigate('/')
+  }
 
-  const handleSubmit = (e) => {
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const response = await axios.get(`http://localhost:3001/getUserInfo/${auth.user}`);
+      const data = await response;
+      setUserInfo(data)
+
+      setName(data.data[0].name)
+      setAddress1(data.data[0].address1)
+      setAddress2(data.data[0].address2)
+      setCity(data.data[0].city)
+      setState(data.data[0].state)
+      setZipcode(data.data[0].zipcode)
+      console.log(data.data[0].name)
+    };
+
+    fetchData();
+  }, []);
+
+  if(!userInfo){
+    return <p>Loading...</p>;
+  }
+
+  const SubmitInformation = () => {
+    
+    axios.put(`http://localhost:3001/update/${auth.user}`, {
+      Name:Name,
+      Address1:Address1,
+      Address2:Address2,
+      City:City,
+      State:State,
+      Zipcode:Zipcode
+    }).then((response)=>{
+      console.log(response)
+    });
+
+    // console.log(1)
+
+    
     //backend stuff
     // setResponseData({
     //   name: Name,
@@ -78,23 +125,23 @@ export default function Profile() {
 
   return (
     <div className="container-Profile">
-      <Navbar />
+     
       <div className="profileImage-container">
         <img src={image} alt="" className="image" />
       </div>
       <div className="profileInformation-container">
         <div className="Name-container">Name: {Name} </div>
         <div className="Address-container">
-          <div className="Address1-container">Address1: {Address1}</div>
-          <div className="Address2-container">Address2: {Address2}</div>
+          <div className="Address1-container">Address1:  {Address1}</div>
+          <div className="Address2-container">Address2:  {Address2}</div>
           <div className="City-container">City: {City}</div>
-          <div className="State-container">State: {State}</div>
-          <div className="Zipcode-container">Zipcode: {Zipcode}</div>
+          <div className="State-container">State:  {State}</div>
+          <div className="Zipcode-container">Zipcode:  {Zipcode}</div>
         </div>
       </div>
       <button onClick={(e) => ShowForm()}>Change Information</button>
       {showForm ? (
-        <form onSubmit={handleSubmit} className="changeForm">
+        <form className="changeForm">
           Change Information:
           <label>Name:</label>
           <input
@@ -146,11 +193,14 @@ export default function Profile() {
             value=""
           /> */}
           <MyDropzone setImage={setImage}></MyDropzone>
-          <input type="submit" value="Submit" />
+          
         </form>
+        
       ) : (
         <div></div>
       )}
+      <button onClick={SubmitInformation}> Submit Information</button>
+      <button onClick={handleLogout}>Log out</button>
     </div>
   );
 }

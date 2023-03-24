@@ -1,4 +1,4 @@
-*{
+/* *{
     margin: 0;
     box-sizing: border-box;
     font-family: "Sans-serif";
@@ -64,4 +64,4 @@ input:focus {
     cursor: pointer;
 }
 
-.signup-btn:hover {transform: scale(1.15)}
+.signup-btn:hover {transform: scale(1.15)} */

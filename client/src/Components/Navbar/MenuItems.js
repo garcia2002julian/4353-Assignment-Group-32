@@ -1,17 +1,17 @@
 export const MenuItems = [
   {
     title: "Quota Form",
-    url: "/",
+    url: "/Quota",
     cName: "nav-links",
   },
   {
     title: "Quota History",
-    url: "/",
+    url: "/History",
     cName: "nav-links",
   },
   {
     title: "Profile",
-    url: "/",
+    url: "/Profile",
     cName: "nav-links",
   },
 ];

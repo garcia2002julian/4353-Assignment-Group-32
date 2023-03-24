@@ -1,4 +1,6 @@
 import React from "react";
+import { useState, useEffect } from "react";
+
 import { historyTempData } from "./data/HistoryTempData";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,44 +10,70 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import Button from '@mui/material/Button';
-
-
+import Button from "@mui/material/Button";
+import axios from "axios";
+import { useAuth } from "./Auth";
 function HistoryTable() {
-    const tempData = historyTempData
+  const [userHistory, setuserHistory] = useState(null);
+  const [userinfo, setuserinfo] = useState(null);
+
+  const auth = useAuth()
+  //use effect to get info at start
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const response = await fetch(`http://localhost:3001/getHistoryOfUser/${auth.user}`);
+      const response2 = await fetch(`http://localhost:3001/getUserInfo/${auth.user}`);
+
+      const data = await response.json();
+      const data2 = await response2.json();
+      setuserinfo(data2)
+      setuserHistory(data)
+      console.log(data2)
+    };
+
+    fetchData();
+  }, []);
+
+  if(!userHistory || userinfo[0].newuser == 1){
+    return <p>Loading...</p>;
+  }
+  
+  const clickmeDebugging = ()=>{
+    console.log(userHistory)
+  }
 
   return (
     <Box>
-      
-    {/* <Button variant="contained" color="primary" href="/profile">Profile</Button> */}
-
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }}>
-        <TableHead>
-        <TableRow>
-
-          <TableCell>Date</TableCell>
-          <TableCell align="right">Gallons Requested</TableCell>
-          <TableCell align="right">Delivery Address</TableCell>
-          <TableCell align="right">Delivery Date</TableCell>
-          <TableCell align="right">Suggested Price</TableCell>
-          <TableCell align="right">Total Amount Due</TableCell>
-        </TableRow>
-        </TableHead>
-        <TableBody>
-            {tempData.map((i)=>(
-                <TableRow key = {i.Id}>
-                    <TableCell component="th" scope="row">{i["Date"]}</TableCell>
-                    <TableCell align="right">{i["Gallons Requested"]}</TableCell>
-                    <TableCell align="right">{i["Delivery Address"]}</TableCell>
-                    <TableCell align="right">{i["Delivery Date"]}</TableCell>
-                    <TableCell align="right">{i["Suggested Price"]}</TableCell>
-                    <TableCell align="right">{i["Total Amount Due"]}</TableCell>   
-                </TableRow>
+      {/* <Button variant="contained" color="primary" href="/profile">Profile</Button> */}
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell align="right">Gallons Requested</TableCell>
+              <TableCell align="right">Delivery Address</TableCell>
+              <TableCell align="right">Delivery Date</TableCell>
+              <TableCell align="right">Suggested Price</TableCell>
+              <TableCell align="right">Total Amount Due</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {userHistory.map((i) => (
+              
+              <TableRow key={i.Id}>
+                <TableCell align="right">{i["gallonsrequested"]}</TableCell>
+                <TableCell align="right">{i["deliveryaddress"]}</TableCell>
+                <TableCell align="right">{i["deliverydate"]}</TableCell>
+                <TableCell align="right">{i["suggestedprice"]}</TableCell>
+                <TableCell align="right">{i["totalamountdue"]}</TableCell>
+              </TableRow>
             ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* <button onClick={clickmeDebugging}>
+        Debug
+      </button> */}
     </Box>
   );
 }
@@ -62,7 +90,9 @@ function History() {
 
   return (
     <div>
-      <Button variant="contained" color="primary" href="/home">Go back</Button>
+      {/* <Button variant="contained" color="primary" href="/home">
+        Go back
+      </Button> */}
       <HistoryTable />
     </div>
   );
