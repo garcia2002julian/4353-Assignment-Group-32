@@ -23,7 +23,6 @@ function App() {
             path="/home"
             element={
               <RequireAuth>
-                <Navbar />
                 <Home />
               </RequireAuth>
             }
