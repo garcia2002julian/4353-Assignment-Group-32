@@ -13,10 +13,7 @@ export default function Profile() {
   };
 
   const auth = useAuth();
-  // auth.login_("abc");
-  console.log("Auth:", auth);
-  auth.login_(auth.user);
-  const user = "testing123";
+  const user = auth.user;
   const navigate = useNavigate();
   const [image, setImage] = useState(Picture);
   const [Name, setName] = useState("Name");
@@ -38,14 +35,14 @@ export default function Profile() {
   const fetchData = async () => {
     const data = await axios.get(`http://localhost:3001/getUserInfo/${user}`);
 
-    console.log("data:", data);
-    setName(data.data.Name);
-    setAddress1(data.data.Address1);
-    setAddress2(data.data.Address2);
-    setCity(data.data.City);
-    setState(data.data.State);
-    setZipcode(data.data.Zipcode);
-    setUserInfo(data.data);
+    console.log("dataget:", data);
+    setName(data.data[0].name);
+    setAddress1(data.data[0].address1);
+    setAddress2(data.data[0].address2);
+    setCity(data.data[0].city);
+    setState(data.data[0].state);
+    setZipcode(data.data[0].zipcode);
+    setUserInfo(data.data[0]);
   };
 
   useEffect(() => {
@@ -72,6 +69,7 @@ export default function Profile() {
         console.log(response);
         fetchData();
       });
+    e.preventDefault();
   };
 
   return (
@@ -80,17 +78,17 @@ export default function Profile() {
         <img src={image} alt="" className="image" />
       </div>
       <div className="profileInformation-container">
-        <div className="Name-container">Name: {userInfo.Name} </div>
+        <div className="Name-container">Name: {userInfo.name} </div>
         <div className="Address-container">
           <div className="Address1-container">
-            Address1: {userInfo.Address1}
+            Address1: {userInfo.address1}
           </div>
           <div className="Address2-container">
-            Address2: {userInfo.Address2}
+            Address2: {userInfo.address2}
           </div>
-          <div className="City-container">City: {userInfo.City}</div>
-          <div className="State-container">State: {userInfo.State}</div>
-          <div className="Zipcode-container">Zipcode: {userInfo.Zipcode}</div>
+          <div className="City-container">City: {userInfo.city}</div>
+          <div className="State-container">State: {userInfo.state}</div>
+          <div className="Zipcode-container">Zipcode: {userInfo.zipcode}</div>
         </div>
       </div>
       <button className="profileButton" onClick={(e) => ShowForm()}>
@@ -103,14 +101,14 @@ export default function Profile() {
           <input
             type="text"
             onChange={(e) => setName(e.target.value)}
-            defaultValue={userInfo.Name}
+            defaultValue={userInfo.name}
             maxLength={20}
             className="nameBox"
           />
           <label>Address1:</label>
           <input
             type="text"
-            defaultValue={userInfo.Address1}
+            defaultValue={userInfo.address1}
             onChange={(e) => setAddress1(e.target.value)}
             maxLength={30}
             className="address1Box"
@@ -118,7 +116,7 @@ export default function Profile() {
           <label>Address2:</label>
           <input
             type="text"
-            defaultValue={userInfo.Address2}
+            defaultValue={userInfo.address2}
             onChange={(e) => setAddress2(e.target.value)}
             maxLength={30}
             className="address2Box"
@@ -136,10 +134,10 @@ export default function Profile() {
           />
           <label>State:</label>
           <select
-            class="form-select"
+            className="form-select"
             type="text"
             onChange={(e) => setState(e.target.value)}
-            defaultValue={userInfo.State}
+            defaultValue={userInfo.state}
           >
             <option value="AL">AL</option>
             <option value="AK">AK</option>
@@ -204,7 +202,9 @@ export default function Profile() {
             maxLength={8}
             className="zipBox"
           />
-          <input type="submit" value="Submit" className="submitBox" />
+          <button type="submit" className="submitBox">
+            Submit
+          </button>
         </form>
       ) : (
         <div></div>
