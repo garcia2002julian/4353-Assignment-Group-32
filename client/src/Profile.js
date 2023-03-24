@@ -1,4 +1,3 @@
-import Navbar from "./Components/Navbar/Navbar";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import Picture from "./profile-icon.jpg";
@@ -77,7 +76,6 @@ export default function Profile() {
 
   return (
     <div className="container-Profile" style={{ color: "rgb(32, 177, 255)" }}>
-      <Navbar />
       <div className="profileImage-container">
         <img src={image} alt="" className="image" />
       </div>

@@ -6,7 +6,16 @@ import { Link } from "react-router-dom";
 export default class Navbar extends Component {
   render() {
     return (
-      <nav className="NavbarItems">
+      <nav
+        className="NavbarItems"
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <h1 className="navbar-logo">Company Name</h1>
         <ul className="nav-menu">
           {MenuItems.map((item, index) => {

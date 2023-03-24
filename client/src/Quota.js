@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import axios from "axios";
-
+import { useAuth } from "./Auth";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -23,17 +23,17 @@ export default function Quota() {
   const [GallonRequested, setGallonRequested] = useState("");
 
   const [logInStatus, setLoginStatus] = useState("");
+  const auth = useAuth();
 
   const [userInfo, setUserInfo] = useState(null);
 
-  const [sumbitButton, setSubmit] = useState(false)
+  const [sumbitButton, setSubmit] = useState(false);
 
-  const isDisabled = !(GallonRequested && value );
-  const issumbitDisabled = !(sumbitButton && GallonRequested && value)
-  
+  const isDisabled = !(GallonRequested && value);
+  const issumbitDisabled = !(sumbitButton && GallonRequested && value);
+
   const [suggestAmount, setSuggestAmount] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
-
 
   const handleChange = (newValue) => {
     setValue(newValue);
@@ -49,20 +49,33 @@ export default function Quota() {
   //   fetchData();
   // }, []);
 
-  useEffect(()=>{
-    const fetchData = async ()=>{
-      const response = await fetch("http://localhost:3001/getUserInfo");
-      const data = await response.json();
-      setUserInfo(data)
+  // useEffect(()=>{
+  //   const fetchData = async ()=>{
+  //     const response = await fetch("http://localhost:3001/getUserInfo");
+  //     const data = await response.json();
+  //     setUserInfo(data)
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await axios.get(
+        `http://localhost:3001/getUserInfo/${auth.user}`
+      );
+      console.log("Data:", data);
+      setUserInfo(data);
     };
 
     fetchData();
   }, []);
 
-  if(!userInfo){
+  console.log("userinfo", userInfo);
+
+  if (!userInfo || (userInfo && userInfo.data.newUser == 1)) {
     return <p>Loading...</p>;
   }
-  
 
   const getSuggestedPrice = () => {
     // need gallon requested, Delivery Address TX or Texas is valid any other state will use a different variable.
@@ -80,15 +93,16 @@ export default function Quota() {
     //   setUserInfo(response.data)
     // });
     // console.log(userInfo)
+    // console.log(userInfo.data.State)
+    // console.log(userInfo.data.neverUseQuota)
 
-    if (userInfo.state == "TX" || userInfo.state == "Texas") {
+    if (userInfo.data.State == "TX" || userInfo.data.State == "Texas") {
       var locationFactor = 0.02;
     } else {
       var locationFactor = 0.04;
     }
     //---------------------------/
-    if (userInfo.newuser == 1) {
-      //Regular user
+    if (userInfo.data.neverUseQuota == 1) {
       var rateHistoryFactor = 0.01;
     } else {
       var rateHistoryFactor = 0.0;
@@ -100,7 +114,7 @@ export default function Quota() {
       var gallonsReqFactor = 0.03;
     }
     var companyProfitFactor = 0.1;
-    var currentPrice = 1.50;
+    var currentPrice = 1.5;
     var margin =
       currentPrice *
       (locationFactor -
@@ -109,46 +123,47 @@ export default function Quota() {
         companyProfitFactor);
     var suggestedPrice = currentPrice + margin;
     var ta = GallonRequested * suggestedPrice;
-    setSuggestAmount(suggestedPrice)
-    setTotalAmount(ta)
+    setSuggestAmount(suggestedPrice);
+    setTotalAmount(ta);
     //console.log('(',locationFactor, '-', rateHistoryFactor, '+', gallonsReqFactor, '+', companyProfitFactor, ')','*',currentPrice)
     //console.log(GallonRequested , '*' , suggestedPrice)
-    setSubmit(true)
-    console.log(value['$d'])
+    setSubmit(true);
+
+    console.log(value["_d"]);
   };
 
-
-  const submitQuota= ()=>{
+  const submitQuota = () => {
     axios
       .post("http://localhost:3001/submitQuota", {
         gallon_req: GallonRequested,
-        delivery_add: userInfo['address 1'],
-        date: value['$d'],
+        delivery_add: userInfo.data.Address1,
+        date: value["_d"],
         suggest_p: suggestAmount,
-        total_amount: totalAmount
+        total_amount: totalAmount,
+        username: auth.user,
       })
       .then((response) => {
+        axios
+          .put(`http://localhost:3001/updateStatus/${auth.user}`, {})
+          .then((response) => {
+            console.log("Success");
+          });
+
         // if (response.data.message) {
         //   setLoginStatus(response.data.message);
         // } else {
-        //   setLoginStatus(response.data[0].username);
+        //   setLoginStatus(response.data.username);
         // }
         console.log(response.data);
       });
-    
-    
-
-
-
-
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <Button variant="contained" color="primary" href="/home">
+      {/* <Button variant="contained" color="primary" href="/home">
         Go back
-      </Button>
-      
+      </Button> */}
+
       <Box
         component="form"
         sx={{
@@ -175,7 +190,7 @@ export default function Quota() {
           type="number"
           onChange={(event) => {
             setGallonRequested(event.target.value);
-            setSubmit(false)
+            setSubmit(false);
           }}
         />
         <TextField
@@ -183,7 +198,7 @@ export default function Quota() {
           id="outlined-disabled"
           label="Delivery Address"
           variant="filled"
-          defaultValue={userInfo['address 1']}
+          defaultValue={userInfo.data.Address1}
         />
         <DesktopDatePicker
           label="Date desktop"
@@ -195,22 +210,33 @@ export default function Quota() {
         <TextField
           disabled
           id="suggested-price"
-          label={totalAmount && suggestAmount  ? suggestAmount : "Suggested Price"}
+          label={
+            totalAmount && suggestAmount ? suggestAmount : "Suggested Price"
+          }
           defaultValue=""
           variant="filled"
         />
         <TextField
           disabled
           id="amount-due"
-          label={totalAmount && suggestAmount  ? totalAmount : "Amount Due"}
-          defaultValue= ""
+          label={totalAmount && suggestAmount ? totalAmount : "Amount Due"}
+          defaultValue=""
           variant="filled"
         />
 
-        <Button variant="outlined" onClick={getSuggestedPrice} disabled={isDisabled}>
+        <Button
+          variant="outlined"
+          onClick={getSuggestedPrice}
+          disabled={isDisabled}
+        >
           Get Suggested Price
         </Button>
-        <Button variant="outlined" sx={{ marginTop: "1em" }} disabled={issumbitDisabled} onClick={submitQuota}>
+        <Button
+          variant="outlined"
+          sx={{ marginTop: "1em" }}
+          disabled={issumbitDisabled}
+          onClick={submitQuota}
+        >
           Submit
         </Button>
       </Box>

@@ -8,6 +8,8 @@ import LoginForm from "./LoginForm";
 import { Link, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./Auth";
 import { RequireAuth } from "./RequireAuth";
+import Navbar from "./Components/Navbar/Navbar";
+
 function App() {
   return (
     <div className="App">
@@ -21,6 +23,7 @@ function App() {
             path="/home"
             element={
               <RequireAuth>
+                <Navbar />
                 <Home />
               </RequireAuth>
             }
@@ -29,6 +32,8 @@ function App() {
             path="/Quota"
             element={
               <RequireAuth>
+                <Navbar />
+
                 <Quota />
               </RequireAuth>
             }
@@ -37,6 +42,8 @@ function App() {
             path="/History"
             element={
               <RequireAuth>
+                <Navbar />
+
                 <History />
               </RequireAuth>
             }
@@ -45,6 +52,7 @@ function App() {
             path="/Profile"
             element={
               <RequireAuth>
+                <Navbar />
                 <Profile />
               </RequireAuth>
             }
