@@ -96,8 +96,8 @@ describe("Testing /login", () => {
   test("It should response the POST method", async () => {
     // Arrange
     const userToLogin = {
-      username: "j",
-      password: "1",
+      username: "player5",
+      password: "12345",
     };
 
     // Act
@@ -111,32 +111,32 @@ describe("Testing /login", () => {
 describe("Testing /update/:username", () => {
   test("It should response the PUT method", async () => {
     // Arrange
-
+    username = "default"
     const initialUser = {
-      username: "j",
       Name: "",
       Address1: "",
       Address2: "",
       City: "",
       State: "",
       Zipcode: "",
+      Password: "123"
     };
 
     const userToUpdate = {
-      username: "j",
       Name: "ra",
       Address1: "1234",
       Address2: "1234",
       City: "1234",
       State: "1234",
       Zipcode: "1234",
+      Password: "123"
     };
 
     // Act
     const res = await request(app)
-      .put(`/update/${userToUpdate.username}`)
+      .put(`/update/${username}`)
       .send(userToUpdate);
-    await request(app).put(`/update/${initialUser.username}`).send(initialUser);
+    await request(app).put(`/update/${username}`).send(initialUser);
 
     // Assert
     expect(res.statusCode).toBe(200);
@@ -147,21 +147,22 @@ describe("Testing /updatePassword/:username", () => {
   test("It should response the PUT method", async () => {
     // Arrange
 
+    username = "ninjaX170"
     const initialUser = {
-      username: "j",
-      password: "i",
+      NewPassword:"123",
+      password: "123456",
     };
 
     const userToUpdate = {
-      username: "j",
-      password: "1234",
+      NewPassword:"123456",
+      password: "123",
     };
 
     // Act
     const res = await request(app)
-      .put(`/update/${userToUpdate.username}`)
+      .put(`/updatePassword/${username}`)
       .send(userToUpdate);
-    await request(app).put(`/update/${initialUser.username}`).send(initialUser);
+    await request(app).put(`/updatePassword/${username}`).send(initialUser);
 
     // Assert
     expect(res.statusCode).toBe(200);
@@ -177,7 +178,7 @@ describe("Testing /submitQuota", () => {
       date: "",
       suggest_p: 10.0,
       total_amount: 40.0,
-      username: "j",
+      username: "player5",
     };
 
     // Act
