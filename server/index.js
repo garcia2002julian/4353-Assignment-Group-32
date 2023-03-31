@@ -5,10 +5,13 @@ const cors = require("cors");
 const fs = require("fs");
 const pkg = require("pg");
 const app = express();
+const bcrypt = require("bcrypt");
 app.use(cors());
 app.use(bodyParser.json());
 
 const { Client } = pkg;
+
+
 
 const db = new Client({
   host: "db.zlvczfuzzkilcsiqdedm.supabase.co",
@@ -20,11 +23,15 @@ const db = new Client({
 
 db.connect();
 
-app.post("/register", (req, res) => {
+let hashedPassword = "";
+
+app.post("/register", async (req, res) => {
   const { username, password } = req.body;
+  hashedPassword =  await bcrypt.hash(password, 10);
+  
   const insertQuery =
     "INSERT INTO userinfo (username, password) VALUES ($1, $2)";
-  const insertValues = [username, password];
+  const insertValues = [username, hashedPassword];
 
   db.query(insertQuery, insertValues, (err, result) => {
     if (err) {
@@ -35,24 +42,49 @@ app.post("/register", (req, res) => {
   });
 });
 
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  const selectQuery =
-    "SELECT * FROM userinfo WHERE username = $1 AND password = $2";
-  const selectValues = [username, password];
+app.post("/login", async (req, res) => {
+  // const { username, password } = req.body;
+  // const selectQuery =
+  //   "SELECT * FROM userinfo WHERE username = $1 AND password = $2";
+  // const selectValues = [username, password];
 
-  db.query(selectQuery, selectValues, (err, result) => {
-    if (err) {
-      res.status(401).send({ err: err });
-    } else {
-      if (result.rows.length > 0) {
+  //  db.query(selectQuery, selectValues, (err, result) => {
+  //   if (err) {
+  //     res.status(401).send({ err: err });
+  //   } else {
+  //     if (result.rows.length > 0) {
+  //       const hashedPassword = result.rows[0].password;
+  //       const isMaatch = await crypt.compare(password, hashedPassword);
+  //       res.status(200).send(result.rows);
+  //     } else {
+  //       console.log("Wrong password");
+  //       res.status(401).send({ message: "wrong password or username" });
+  //     }
+  //   }
+  // });
+  const { username, password } = req.body;
+  const selectQuery = "SELECT * FROM userinfo WHERE username = $1";
+  const selectValues = [username];
+
+  try {
+    const result = await db.query(selectQuery, selectValues);
+    if (result.rows.length > 0) {
+      const hashedPassword = result.rows[0].password;
+      const isMatch = await bcrypt.compare(password, hashedPassword);
+      if (isMatch) {
         res.status(200).send(result.rows);
       } else {
         console.log("Wrong password");
         res.status(401).send({ message: "wrong password or username" });
       }
+    } else {
+      console.log("User not found");
+      res.status(401).send({ message: "wrong password or username" });
     }
-  });
+  } catch (err) {
+    res.status(401).send({ err: err });
+  }
+
 });
 
 app.get("/getUserInfo/:username", (req, res) => {
@@ -72,7 +104,7 @@ app.get("/getUserInfo/:username", (req, res) => {
   );
 });
 
-app.put("/update/:username", (req, res) => {
+app.put("/update/:username", async (req, res) => {
   const username = req.params.username;
   const name = req.body.Name;
   const address1 = req.body.Address1;
@@ -81,35 +113,66 @@ app.put("/update/:username", (req, res) => {
   const state = req.body.State;
   const zip = req.body.Zipcode;
   const password = req.body.Password;
-
-  db.query(
-    "UPDATE userinfo SET Name=$1, Address1=$2, Address2=$3, City=$4, State=$5, Zipcode=$6, newUser=0 WHERE username=$7 and password=$8",
-    [name, address1, address2, city, state, zip, username, password],
-    (err, result) => {
-      if (err) {
-        console.log(err);
+  
+  const selectQuery = "SELECT * FROM userinfo WHERE username = $1";
+  const selectValues = [username];
+  console.log(password)
+  try {
+    const result = await db.query(selectQuery, selectValues);
+    if (result.rows.length > 0) {
+      const hashedPassword = result.rows[0].password;
+      console.log(hashedPassword)
+      const isMatch = await bcrypt.compare(password, hashedPassword);
+      if (isMatch) {
+        db.query(
+          "UPDATE userinfo SET Name=$1, Address1=$2, Address2=$3, City=$4, State=$5, Zipcode=$6, newUser=0 WHERE username=$7",
+          [name, address1, address2, city, state, zip, username],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              if (result.rowCount > 0) {
+                console.log("Updated")
+                res.status(200).send(result.rows);
+              } else {
+                console.log("Wrong password");
+                res.status(200).send({ message: "Wrong password" });
+              }
+            }
+          }
+        );
       } else {
-        if (result.rowCount > 0) {
-          res.status(200).send(result.rows);
-        } else {
-          console.log("Wrong password");
-          res.status(200).send({ message: "Wrong password" });
-        }
+        console.log("Wrong password");
+        res.status(401).send({ message: "wrong password or username" });
       }
+    } else {
+      console.log("User not found");
+      res.status(401).send({ message: "wrong password or username" });
     }
-  );
+  } catch (err) {
+    res.status(401).send({ err: err });
+  }
+
+  
+
+    
+
+
 });
 
-app.put("/updatePassword/:username", (req, res) => {
+app.put("/updatePassword/:username", async (req, res) => {
   const username = req.params.username;
   const password = req.body.Password;
   const newPassword = req.body.NewPassword;
+  hashedPassword =  await bcrypt.hash(newPassword, 10);
+
   db.query(
-    "UPDATE userinfo SET password = $1, newUser=0 WHERE username=$2 and password=$3",
-    [newPassword, username, password],
+    "UPDATE userinfo SET password = $1, newUser=0 WHERE username=$2",
+    [hashedPassword, username],
     (err, result) => {
       if (err) {
         console.log(err);
+        res.send(err)
       } else {
         res.status(200).send(result.rows);
       }
