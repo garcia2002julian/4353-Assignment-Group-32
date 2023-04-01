@@ -49,7 +49,6 @@ describe("Testing /getUserInfo/:username", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body[0].username).toEqual(username);
     expect(res.body[0]).toHaveProperty("username");
-    expect(res.body[0]).toHaveProperty("password");
     expect(res.body[0]).toHaveProperty("newuser");
     expect(res.body[0]).toHaveProperty("address1");
     expect(res.body[0]).toHaveProperty("address2");
