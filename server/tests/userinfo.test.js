@@ -44,7 +44,7 @@ describe("Testing", () => {
 
 describe("Testing /getUserInfo/:username", () => {
   test("It should response the GET method", async () => {
-    username = "j";
+    username = "ninjaX172";
     const res = await request(app).get(`/getUserInfo/${username}`);
     expect(res.statusCode).toBe(200);
     expect(res.body[0].username).toEqual(username);
@@ -62,7 +62,7 @@ describe("Testing /getUserInfo/:username", () => {
 
 describe("Testing /getHistoryOfUser/:username", () => {
   test("It should response the GET method", async () => {
-    username = "j";
+    username = "ninjaX172";
     const res = await request(app).get(`/getHistoryOfUser/${username}`);
     expect(res.statusCode).toBe(200);
   });
@@ -96,8 +96,8 @@ describe("Testing /login", () => {
   test("It should response the POST method", async () => {
     // Arrange
     const userToLogin = {
-      username: "player5",
-      password: "12345",
+      username: "ninjaX172",
+      password: "123",
     };
 
     // Act
@@ -111,7 +111,7 @@ describe("Testing /login", () => {
 describe("Testing /update/:username", () => {
   test("It should response the PUT method", async () => {
     // Arrange
-    username = "default"
+    username = "ninjaX172"
     const initialUser = {
       Name: "",
       Address1: "",
@@ -147,7 +147,7 @@ describe("Testing /updatePassword/:username", () => {
   test("It should response the PUT method", async () => {
     // Arrange
 
-    username = "ninjaX170"
+    username = "ninjaX172"
     const initialUser = {
       NewPassword:"123",
       password: "123456",
@@ -178,7 +178,7 @@ describe("Testing /submitQuota", () => {
       date: "",
       suggest_p: 10.0,
       total_amount: 40.0,
-      username: "player5",
+      username: "ninjaX172",
     };
 
     // Act
@@ -196,7 +196,7 @@ describe("Testing /updateStatus/:username", () => {
   test("It should response the PUT method", async () => {
     // Arrange
     const userToUpdate = {
-      username: "j",
+      username: "ninjaX172",
     };
 
     // Act
