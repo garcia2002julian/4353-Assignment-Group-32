@@ -11,8 +11,6 @@ app.use(bodyParser.json());
 
 const { Client } = pkg;
 
-
-
 const db = new Client({
   host: "db.zlvczfuzzkilcsiqdedm.supabase.co",
   user: "postgres",
@@ -25,18 +23,16 @@ db.connect();
 
 let hashedPassword = "";
 
-
-
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  hashedPassword =  await bcrypt.hash(password, 10);
-  console.log(hashedPassword)
-  console.log(username)
-  console.log(password)
+  hashedPassword = await bcrypt.hash(password, 10);
+  console.log(hashedPassword);
+  console.log(username);
+  console.log(password);
   const insertQuery =
     "INSERT INTO usercredentials (username, password) VALUES ($1, $2)";
 
-    const insertValues = [username, hashedPassword];
+  const insertValues = [username, hashedPassword];
 
   const insertQueryInfo = "INSERT INTO userinfo (username) VALUES ($1)";
 
@@ -46,21 +42,16 @@ app.post("/register", async (req, res) => {
     if (err) {
       res.send({ message: "Already exist username" });
     } else {
-      db.query(insertQueryInfo, insertValuesInfo, (err, result)=>{
-        if(err){
-          console.log(err)
-        }
-        else{
+      db.query(insertQueryInfo, insertValuesInfo, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
           res.status(201).send({ messageRegister: "Register" });
         }
-      })
+      });
     }
   });
 });
-
-
-
-
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -85,14 +76,7 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     res.status(401).send({ err: err });
   }
-
 });
-
-
-
-
-
-
 
 app.get("/getUserInfo/:username", (req, res) => {
   const fetchusernameData = req.params.username;
@@ -111,9 +95,6 @@ app.get("/getUserInfo/:username", (req, res) => {
   );
 });
 
-
-
-
 app.put("/update/:username", async (req, res) => {
   const username = req.params.username;
   const name = req.body.Name;
@@ -123,17 +104,17 @@ app.put("/update/:username", async (req, res) => {
   const state = req.body.State;
   const zip = req.body.Zipcode;
   const password = req.body.Password;
-  
+
   const selectQuery = "SELECT * FROM usercredentials WHERE username = $1";
   const selectValues = [username];
-  console.log(password)
+  console.log(password);
   try {
     const result = await db.query(selectQuery, selectValues);
     if (result.rows.length > 0) {
       const hashedPassword = result.rows[0].password;
-      console.log(hashedPassword)
+      console.log(hashedPassword);
       const isMatch = await bcrypt.compare(password, hashedPassword);
-      console.log(isMatch)
+      console.log(isMatch);
       if (isMatch) {
         db.query(
           "UPDATE userinfo SET Name=$1, Address1=$2, Address2=$3, City=$4, State=$5, Zipcode=$6, newUser=0 WHERE username=$7",
@@ -143,7 +124,7 @@ app.put("/update/:username", async (req, res) => {
               console.log(err);
             } else {
               if (result.rowCount > 0) {
-                console.log("Updated")
+                console.log("Updated");
                 res.status(200).send(result.rows);
               } else {
                 console.log(result);
@@ -165,15 +146,11 @@ app.put("/update/:username", async (req, res) => {
   }
 });
 
-
-
-
-
 app.put("/updatePassword/:username", async (req, res) => {
   const username = req.params.username;
   const password = req.body.Password;
   const newPassword = req.body.NewPassword;
-  hashedPassword =  await bcrypt.hash(newPassword, 10);
+  hashedPassword = await bcrypt.hash(newPassword, 10);
 
   db.query(
     "UPDATE usercredentials SET password = $1 WHERE username=$2",
@@ -181,14 +158,13 @@ app.put("/updatePassword/:username", async (req, res) => {
     (err, result) => {
       if (err) {
         console.log(err);
-        res.send(err)
+        res.send(err);
       } else {
         res.status(200).send(result.rows);
       }
     }
   );
 });
-
 
 app.get("/getHistoryOfUser/:username", (req, res) => {
   const fetchusernameData = req.params.username;

@@ -70,6 +70,7 @@ export default function Profile() {
         Password: Password,
       })
       .then((response) => {
+        console.log("hey");
         if (response.data.message) {
           setStatus(response.data.message);
         } else {
@@ -84,7 +85,9 @@ export default function Profile() {
           Password: Password,
           NewPassword: NewPassword,
         })
-        .then((response2) => {});
+        .then((response2) => {
+          console.log("password response", response2);
+        });
     }
     e.preventDefault();
   };
